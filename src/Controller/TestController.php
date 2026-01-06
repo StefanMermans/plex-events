@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Domain\Media\ShowRepositoryInterface;
 use App\Dto\PlexEventDto;
-use PhpCsFixer\Cache\CacheInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -18,7 +18,7 @@ final class TestController extends AbstractController
     public function index(
         #[MapRequestPayload] PlexEventDto $dto,
         LoggerInterface $logger,
-        CacheInterface $cache,
+        ShowRepositoryInterface $showRepository,
     ): JsonResponse
     {
         $payload = json_decode($dto->payload, true);
@@ -33,7 +33,8 @@ final class TestController extends AbstractController
                 break;
         }
 
-        $cache = new FilesystemAdapter()
+        $show = $showRepository->findById(416744);
+        $logger->info('Fetched show: ' . $show->title);
 
         return $this->json([
             'message' => 'Welcome to your new controller!',
