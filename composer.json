@@ -65,6 +65,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#fb7185,#fdba74\" \"symfony server:start --allow-all-ip\" \"npm run --prefix ./frontend dev\" --names=symfony,vite --kill-others"
         ]
     },
     "conflict": {
