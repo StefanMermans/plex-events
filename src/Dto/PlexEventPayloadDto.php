@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class PlexEventDto {
+class PlexEventPayloadDto {
     public function __construct(
         public string $payload,
     ) {}

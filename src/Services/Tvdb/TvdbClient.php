@@ -12,32 +12,25 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class TvdbClient
 {
+    use CachedRequest;
+
     public function __construct(
         #[Autowire(service: 'cache.tvdb')]
-        private CacheInterface $cache,
-        private HttpClientInterface $client,
-        private string $baseUrl,
-        private string $apiKey,
-        private null|string $token = null,
+        protected readonly CacheInterface $cache,
+        protected readonly HttpClientInterface $client,
+        protected readonly string $baseUrl,
+        protected readonly string $apiKey,
+        protected null|string $token = null,
     ) {}
 
-    public function get(string $uri, array $headers = []): array
+    public function get(string $uri): array
     {
-        $response = $this->client->request('GET', $this->baseUrl . $uri, [
-            'headers' => $this->headers($headers),
-        ]);
-
-        return $response->toArray();
+        return $this->cachedRequest('GET', $uri);
     }
 
     public function post(string $uri, array $data = [], array $headers = []): array
     {
-        $response = $this->client->request('POST', $this->baseUrl . $uri, [
-            'headers' => $this->headers($headers),
-            'json' => $data,
-        ]);
-
-        return $response->toArray();
+        return $this->cachedRequest('POST', $uri, $data, $headers);
     }
 
     public function authenticate(): self {
@@ -90,5 +83,9 @@ class TvdbClient
         }
 
         return (new \DateTimeImmutable())->setTimestamp($payload['exp']);
+    }
+
+    protected function url(string $uri): string {
+        return $this->baseUrl . $uri;
     }
 }
