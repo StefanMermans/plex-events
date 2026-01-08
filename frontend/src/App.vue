@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+import {onMounted, ref} from "vue";
+
+const show = ref();
+
+onMounted(async () => {
+  const response = await fetch("http://localhost:8000/show/437266");
+  show.value = await response.json();
+})
+
 </script>
 
 <template>
-  <div>
+  <div v-if="show">
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
+    <HelloWorld msg="Vite + Vue" />
+    <div>Loaded show {{ show?.title }}</div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <div v-else>Loading...</div>
 </template>
 
 <style scoped>
