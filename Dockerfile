@@ -50,7 +50,7 @@ COPY --exclude=frontend . .
 COPY --from=composer /app /var/www/html/
 COPY --from=frontend /app/public/ /var/www/html/public/
 COPY ./docker/supervisord.conf /etc/supervisord.conf
-COPY ./docker/nginx/symfony.conf /etc/nginx/http.d/default.conf
+COPY ./docker/nginx.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 80
 

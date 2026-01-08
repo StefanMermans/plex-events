@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Environment files
+.env.local
+.env.*.local
+
+# Var directory (mounted as volume)
+/var/cache/
+/var/log/
+
+# Tests
+/tests/
+
+# Tinker
+.tinker/
+
+# Fixtures
+/fixtures/
