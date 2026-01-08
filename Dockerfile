@@ -48,7 +48,7 @@ ENV APP_ENV=prod
 
 COPY --exclude=frontend . .
 COPY --from=composer /app /var/www/html/
-COPY --from=frontend /app/frontend/dist/ /var/www/html/frontend/dist/
+COPY --from=frontend /app/public/app/ /var/www/html/frontend/dist/
 COPY ./docker/supervisord.conf /etc/supervisord.conf
 COPY ./docker/nginx.conf /etc/nginx/http.d/default.conf.template
 COPY ./docker/entrypoint.sh /entrypoint.sh
