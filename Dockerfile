@@ -29,6 +29,7 @@ FROM php:8.4-fpm-alpine AS base
 RUN apk add --no-cache \
     nginx \
     supervisor \
+    gettext \
     icu-libs \
     libzip \
     icu-dev \
