@@ -1,29 +1,31 @@
+# Install composer dependencies
 FROM composer:2.9.3 AS composer
 WORKDIR /app/
 
 COPY composer.json composer.lock /app/
 
-RUN composer install \
+RUN --mount=type=cache,target=/tmp/cache \
+    composer install \
     --no-dev \
     --no-interaction \
     --no-scripts \
     --prefer-dist \
     --optimize-autoloader
 
-FROM node:24 AS node
+# install node dependencies
+FROM node:24 AS frontend
 WORKDIR /app/frontend/
 
 COPY ./frontend/package.json ./frontend/package-lock.json /app/frontend/
 
-RUN npm install
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
-FROM node AS frontend
-WORKDIR /app/frontend/
-
-COPY ./frontend /app/frontend/
+COPY ./frontend/ /app/frontend/
 
 RUN npm run build
 
+# Install required packages for the final image
 FROM php:8.4-fpm-alpine AS base
 
 RUN apk add --no-cache \
@@ -42,6 +44,7 @@ RUN apk add --no-cache \
     && docker-php-ext-enable redis \
     && apk del autoconf g++ make
 
+# Final app image
 FROM base AS app
 WORKDIR /var/www/html/
 
