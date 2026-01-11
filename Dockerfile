@@ -22,6 +22,7 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
 COPY ./frontend/ /app/frontend/
+COPY ./frontend/.env.prod /app/frontend/.env
 
 RUN npm run build
 
