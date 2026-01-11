@@ -9,6 +9,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-# Editors
+###> Editors ###
 .idea/
 .vscode/
+###< Editors ###
