@@ -1,0 +1,13 @@
+name: plex-events
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: plex-events
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    ports:
+      - "8888:8000"

@@ -1,0 +1,65 @@
+# Install composer dependencies
+FROM composer:2.9.3 AS composer
+WORKDIR /app/
+
+COPY composer.json composer.lock /app/
+
+RUN --mount=type=cache,target=/tmp/cache \
+    composer install \
+    --no-dev \
+    --no-interaction \
+    --no-scripts \
+    --prefer-dist \
+    --optimize-autoloader
+
+# install node dependencies
+FROM node:24 AS frontend
+WORKDIR /app/frontend/
+
+COPY ./frontend/package.json ./frontend/package-lock.json /app/frontend/
+
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+COPY ./frontend/ /app/frontend/
+COPY ./frontend/.env.prod /app/frontend/.env
+
+RUN npm run build
+
+# Install required packages for the final image
+FROM php:8.4-fpm-alpine AS base
+
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    gettext \
+    icu-libs \
+    libzip \
+    icu-dev \
+    libzip-dev \
+    autoconf \
+    g++ \
+    make \
+    && docker-php-ext-install intl pdo_mysql zip exif opcache \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del autoconf g++ make
+
+# Final app image
+FROM base AS app
+WORKDIR /var/www/html/
+
+ENV APP_ENV=prod
+
+COPY --exclude=frontend . .
+COPY --from=composer /app /var/www/html/
+COPY --from=frontend /app/public/app/ /var/www/html/frontend/dist/
+COPY ./docker/supervisord.conf /etc/supervisord.conf
+COPY ./docker/nginx.conf /etc/nginx/http.d/default.conf.template
+COPY ./docker/entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 80
+
+CMD ["/entrypoint.sh"]

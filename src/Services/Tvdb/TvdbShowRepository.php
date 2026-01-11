@@ -6,25 +6,15 @@ namespace App\Services\Tvdb;
 
 use App\Domain\Media\Show;
 use App\Domain\Media\ShowRepositoryInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Contracts\Cache\CacheInterface;
 
-class TvdbShowRepository implements ShowRepositoryInterface {
-    use CachedMedia;
-
-    public function __construct(
-        private TvdbClient $client,
-        #[Autowire(service: 'cache.tvdb')]
-        private CacheInterface $cache,
-    )
-    {
-    }
+class TvdbShowRepository extends TvdbRepository implements ShowRepositoryInterface {
 
     public function findById(int $id): ?Show {
-        return $this->cache("show_{$id}", function() use ($id) {
-            $data = $this->client->authenticate()->get("/series/{$id}");
+        $data = $this->client->authenticate()->get("/series/{$id}")['data'];
 
-            return new Show($data['data']['id'], $data['data']['name']);
-        });
+        return new Show(
+            $data['id'],
+            $data['name'],
+        );
     }
 }
