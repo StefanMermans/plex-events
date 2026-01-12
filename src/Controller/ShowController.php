@@ -23,8 +23,6 @@ final class ShowController extends AbstractController
         int $id,
         ShowRepositoryInterface $showRepository,
     ): JsonResponse {
-        return $this->json($showRepository->findById($id), headers: [
-            'Access-Control-Allow-Origin' => '*', // TODO: this is a temp fix. we need a better solution
-        ]);
+        return $this->json($showRepository->findById($id));
     }
 }

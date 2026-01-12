@@ -40,6 +40,6 @@ final class RegistrationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new JsonResponse($user);
+        return $this->json($user);
     }
 }
