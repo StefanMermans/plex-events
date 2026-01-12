@@ -15,8 +15,7 @@
 .env.*.local
 
 # Var directory (mounted as volume)
-/var/cache/
-/var/log/
+var/
 
 # Tests
 /tests/
