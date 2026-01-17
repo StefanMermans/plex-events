@@ -17,32 +17,29 @@ const emit = defineEmits<{
     (e: 'toggle', collapsed: boolean): void
 }>();
 
+const setSidebarCollapsed = (collapsed: boolean) => {
+    isCollapsed.value = collapsed;
+    emit('toggle', collapsed);
+};
+
 const toggleSidebar = () => {
-    isCollapsed.value = !isCollapsed.value;
-    emit('toggle', isCollapsed.value);
+    setSidebarCollapsed(!isCollapsed.value);
 };
 
 // Responsive check
-const checkScreenSize = () => {
-    if (window.innerWidth < 768) {
-        if (!isCollapsed.value) {
-            isCollapsed.value = true;
-            emit('toggle', true);
-        }
+const collapseIfScreenIsSmall = () => {
+    if (window.innerWidth < 768 && !isCollapsed.value) {
+        setSidebarCollapsed(true);
     }
 };
 
 onMounted(() => {
-    if (window.innerWidth < 768) {
-        isCollapsed.value = true;
-    }
-    emit('toggle', isCollapsed.value); // Sync initial state
-    
-    window.addEventListener('resize', checkScreenSize);
+    collapseIfScreenIsSmall();
+    window.addEventListener('resize', collapseIfScreenIsSmall);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('resize', checkScreenSize);
+    window.removeEventListener('resize', collapseIfScreenIsSmall);
 });
 
 const router = useRouter();
