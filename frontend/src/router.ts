@@ -4,6 +4,7 @@ import TestView from './views/TestView.vue'
 import HomeView from './views/HomeView.vue'
 import RegisterView from './views/RegisterView.vue'
 import LoginView from './views/LoginView.vue'
+import PlexEventView from './views/PlexEventView.vue'
 
 const routes = [
     {
@@ -25,6 +26,11 @@ const routes = [
         path: "/login",
         name: "login",
         component: LoginView
+    },
+    {
+        path: "/plex-event",
+        name: "plex-event",
+        component: PlexEventView
     }
 ];
 

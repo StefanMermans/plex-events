@@ -18,18 +18,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PlexEventController extends AbstractController
 {
     public function __construct(
-        protected ShowRepositoryInterface    $showRepository,
+        protected ShowRepositoryInterface $showRepository,
         protected EpisodeRepositoryInterface $episodeRepository,
         protected SeriesRepository $seriesRepository
-    )
-    {
+    ) {
     }
 
     #[Route('/plex/event', name: 'app_plex_event')]
     public function index(
         #[MapRequestPayload] PlexEventPayloadDto $dto,
-    ): Response
-    {
+    ): Response {
         $payload = json_decode($dto->payload, true);
 
         $episode = $this->getEpisode($payload);
@@ -44,7 +42,7 @@ final class PlexEventController extends AbstractController
         $tvdbLink = array_find($payload['Metadata']['Guid'], static fn(array $value) => str_starts_with($value['id'], 'tvdb://'));
         $tvdbId = substr($tvdbLink['id'], 7);
 
-        return $this->episodeRepository->findById((int)$tvdbId);
+        return $this->episodeRepository->findById((int) $tvdbId);
     }
 
     protected function getShow(Episode $episode): Show
