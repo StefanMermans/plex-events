@@ -40,10 +40,7 @@ RUN apk add --no-cache \
     autoconf \
     g++ \
     make \
-    redis \
     && docker-php-ext-install intl pdo_mysql zip exif opcache \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
     && apk del autoconf g++ make
 
 # Final app image
