@@ -40,7 +40,7 @@ final class TestController extends AbstractController
         $tvdbId = substr($tvdbLink['id'], 7);
         $episode = $episodeRepository->findById((int)$tvdbId);
         $show = $showRepository->findById($episode->seriesId);
-        $logger->info('Fetched show: ' . $show->title);
+        $logger->info('Fetched show: ' . $show->originalTitle);
 
         return new Response(null, Response::HTTP_NO_CONTENT);
     }

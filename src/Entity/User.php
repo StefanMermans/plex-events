@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Traits\Timestamps;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,6 +37,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(options: ['default' => false])]
     private ?bool $is_active = false;
+
+    /**
+     * @var Collection<int, ReleaseUser>
+     */
+    #[ORM\OneToMany(targetEntity: ReleaseUser::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $releaseUsers;
+
+    public function __construct()
+    {
+        $this->releaseUsers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +132,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReleaseUser>
+     */
+    public function getReleaseUsers(): Collection
+    {
+        return $this->releaseUsers;
+    }
+
+    public function addReleaseUser(ReleaseUser $releaseUser): static
+    {
+        if (!$this->releaseUsers->contains($releaseUser)) {
+            $this->releaseUsers->add($releaseUser);
+            $releaseUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReleaseUser(ReleaseUser $releaseUser): static
+    {
+        if ($this->releaseUsers->removeElement($releaseUser)) {
+            // set the owning side to null (unless already changed)
+            if ($releaseUser->getUser() === $this) {
+                $releaseUser->setUser(null);
+            }
+        }
 
         return $this;
     }

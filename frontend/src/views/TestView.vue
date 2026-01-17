@@ -4,7 +4,7 @@ import {onMounted, ref} from "vue";
 const show = ref();
 
 onMounted(async () => {
-  const api_url = import.meta.env.VITE_API_URL; 
+  const api_url = import.meta.env.VITE_API_URL;
   const response = await fetch(`${api_url}/show/437266`);
   show.value = await response.json();
 })
