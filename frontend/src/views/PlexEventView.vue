@@ -1,18 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import InputField from '../components/InputField.vue';
 import PrimaryButton from '../components/PrimaryButton.vue';
 
 import api from '../api';
 
-const plexEventUrl = api.getUri({ url: '/plex/event' });
+const plexEventUrl = ref('');
 const copied = ref(false);
+const copiedTimeoutId = ref<number | null>(null);
+
+const fetchUrl = async () => {
+    try {
+        const response = await api.get('/plex/url');
+        plexEventUrl.value = response.data.url;
+    } catch (err) {
+        console.error('Failed to fetch Plex URL', err);
+    }
+};
+
+
+onMounted(() => {
+    fetchUrl();
+});
 
 const copyToClipboard = async () => {
     try {
-        await navigator.clipboard.writeText(plexEventUrl);
+        await navigator.clipboard.writeText(plexEventUrl.value);
         copied.value = true;
-        setTimeout(() => {
+        if (copiedTimeoutId.value) {
+            clearTimeout(copiedTimeoutId.value);
+        }
+        copiedTimeoutId.value = setTimeout(() => {
             copied.value = false;
         }, 2000);
     } catch (err) {

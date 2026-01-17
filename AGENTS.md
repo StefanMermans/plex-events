@@ -37,6 +37,10 @@ The frontend is a Single Page Application (SPA) built with **Vue 3**, **Vite**, 
 - **`InputField.vue`**: A standardized input component with support for labels, error messages, and slots (prefix/suffix). Use this for forms to maintain design consistency.
 - **`PrimaryButton.vue`**: The standard action button for the application.
 
+
+### Code Style
+- **Component Order**: In `.vue` files, the `<script>` block must come before the `<template>` block. Standard order: `<script>`, `<template>`, `<style>`.
+
 ### Development
 - **Run Locally**: `npm run dev` (starts the Vite dev server).
 - **Build**: `npm run build` (compiles assets to `dist/`).
