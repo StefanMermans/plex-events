@@ -40,6 +40,7 @@ The frontend is a Single Page Application (SPA) built with **Vue 3**, **Vite**, 
 
 ### Code Style
 - **Component Order**: In `.vue` files, the `<script>` block must come before the `<template>` block. Standard order: `<script>`, `<template>`, `<style>`.
+- **DRY Principle**: Extract repeated and large chunks of code into reusable functions, composables, or components to improve maintainability and readability.
 
 ### Development
 - **Run Locally**: `npm run dev` (starts the Vite dev server).

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, type FunctionalComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../api';
+import NavItem from './NavItem.vue';
 import { 
     HomeIcon, 
     QueueListIcon, 
@@ -18,7 +19,6 @@ const emit = defineEmits<{
 
 const toggleSidebar = () => {
     isCollapsed.value = !isCollapsed.value;
-    // Emit event for parent layout to adjust margins
     emit('toggle', isCollapsed.value);
 };
 
@@ -29,9 +29,6 @@ const checkScreenSize = () => {
             isCollapsed.value = true;
             emit('toggle', true);
         }
-    } else {
-         // Optional: auto-expand on large screens? 
-         // For now, let's respect user choice or default to expanded only on initial load if > 768
     }
 };
 
@@ -59,6 +56,17 @@ const handleLogout = async () => {
         await router.push('/login');
     }
 };
+
+type NavItemTemplate = {
+    label: string;
+    to: string;
+    icon: FunctionalComponent;
+}
+
+const navItems: NavItemTemplate[] = [
+    { label: 'Dashboard', to: '/', icon: HomeIcon },
+    { label: 'Plex Events', to: '/plex-event', icon: QueueListIcon },
+];
 </script>
 
 <template>
@@ -85,73 +93,30 @@ const handleLogout = async () => {
         </div>
 
         <nav class="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
-            <RouterLink 
-                to="/" 
-                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group relative"
-                active-class="bg-primary-600 text-white shadow-lg shadow-primary-900/50"
-                :class="[$route.path !== '/' ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : '']"
+            <NavItem
+                v-for="item in navItems"
+                :key="item.to"
+                :to="item.to"
+                :label="item.label"
+                :is-collapsed="isCollapsed"
             >
-                <HomeIcon class="h-6 w-6 flex-shrink-0" />
-                <span 
-                    v-if="!isCollapsed" 
-                    class="font-medium whitespace-nowrap transition-opacity duration-200"
-                >
-                    Dashboard
-                </span>
-                
-                <!-- Tooltip for collapsed state -->
-                <div 
-                    v-if="isCollapsed" 
-                    class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-gray-700 pointer-events-none shadow-xl"
-                >
-                    Dashboard
-                </div>
-            </RouterLink>
-
-            <RouterLink 
-                to="/plex-event" 
-                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group relative"
-                active-class="bg-primary-600 text-white shadow-lg shadow-primary-900/50"
-                :class="[$route.path !== '/plex-event' ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : '']"
-            >
-                <QueueListIcon class="h-6 w-6 flex-shrink-0" />
-                <span 
-                    v-if="!isCollapsed" 
-                    class="font-medium whitespace-nowrap transition-opacity duration-200"
-                >
-                    Plex Events
-                </span>
-                
-                <!-- Tooltip for collapsed state -->
-                <div 
-                    v-if="isCollapsed" 
-                    class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-gray-700 pointer-events-none shadow-xl"
-                >
-                    Plex Events
-                </div>
-            </RouterLink>
+                <template #icon>
+                    <component :is="item.icon" class="h-6 w-6" />
+                </template>
+            </NavItem>
         </nav>
 
         <div class="p-4 border-t border-gray-800">
-            <button 
+            <NavItem
+                label="Logout"
+                :is-collapsed="isCollapsed"
+                variant="danger"
                 @click="handleLogout"
-                class="flex items-center w-full space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-red-900/20 hover:text-red-400 transition-all duration-200 group relative"
             >
-                <ArrowLeftOnRectangleIcon class="h-6 w-6 flex-shrink-0" />
-                <span 
-                    v-if="!isCollapsed" 
-                    class="font-medium whitespace-nowrap"
-                >
-                    Logout
-                </span>
-                 <!-- Tooltip for collapsed state -->
-                <div 
-                    v-if="isCollapsed" 
-                    class="absolute left-16 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-gray-700 pointer-events-none shadow-xl"
-                >
-                    Logout
-                </div>
-            </button>
+                <template #icon>
+                    <ArrowLeftOnRectangleIcon class="h-6 w-6" />
+                </template>
+            </NavItem>
         </div>
     </div>
 </template>
