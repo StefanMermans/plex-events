@@ -4,18 +4,18 @@
     "owner": true,
     "Account": {
         "id": 63204474,
-        "thumb": "https://plex.tv/users/ea224c9df2051e82/avatar?c=1767641018",
+        "thumb": "https://plex.tv/users/ea224c9df2051e82/avatar?c=1768643438",
         "title": "StefanMermans"
     },
     "Server": {
         "title": "ServerStefan",
-        "uuid": "8144439e00f0464b52a9ecbb225b4d04771150e9"
+        "uuid": "1294172e00f074281a2deua9bb22a78128e19201"
     },
     "Player": {
         "local": true,
-        "publicAddress": "77.160.0.253",
+        "publicAddress": "128.77.115.215",
         "title": "Stefans-MacBook-Pro.local",
-        "uuid": "bdae9whg65mm9li5ganbgs8j"
+        "uuid": "adfa2jun21na2aj2hejsog0i"
     },
     "Metadata": {
         "librarySectionType": "show",
