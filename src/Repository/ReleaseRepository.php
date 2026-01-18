@@ -16,6 +16,11 @@ class ReleaseRepository extends ServiceEntityRepository
         parent::__construct($registry, Release::class);
     }
 
+    public function findByTvdbId(string $tvdbId): ?Release
+    {
+        return $this->findOneBy(['tvdbId' => $tvdbId]);
+    }
+
     //    /**
     //     * @return Release[] Returns an array of Release objects
     //     */

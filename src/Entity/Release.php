@@ -6,6 +6,7 @@ use App\Enums\ReleaseType;
 use App\Repository\ReleaseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReleaseRepository::class)]
@@ -24,7 +25,7 @@ class Release
     #[ORM\Column(enumType: ReleaseType::class)]
     private ?ReleaseType $type = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $number = null;
 
     #[ORM\Column(length: 255)]
@@ -38,6 +39,9 @@ class Release
      */
     #[ORM\OneToMany(targetEntity: ReleaseUser::class, mappedBy: 'seriesRelease', orphanRemoval: true)]
     private Collection $releaseUsers;
+
+    #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    private ?string $tvdbId = null;
 
     public function __construct()
     {
@@ -135,6 +139,18 @@ class Release
                 $releaseUser->setSeriesRelease(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTvdbId(): ?string
+    {
+        return $this->tvdbId;
+    }
+
+    public function setTvdbId(?string $tvdbId): static
+    {
+        $this->tvdbId = $tvdbId;
 
         return $this;
     }

@@ -8,9 +8,9 @@ use Symfony\Contracts\Cache\CacheInterface;
 class TvdbRepository
 {
     public function __construct(
-        protected TvdbClient     $client,
+        protected TvdbClient $client,
         #[Autowire(service: 'cache.tvdb')]
         protected CacheInterface $cache,
-    )
-    {}
+    ) {
+    }
 }

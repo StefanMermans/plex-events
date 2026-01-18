@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Domain\Media\EpisodeRepositoryInterface;
+use App\Domain\Media\ReleaseRepositoryInterface;
 use App\Domain\Media\ShowRepositoryInterface;
 use App\Dto\PlexEventPayloadDto;
 use Psr\Log\LoggerInterface;
@@ -18,15 +18,14 @@ final class TestController extends AbstractController
     #[Route('/test', name: 'app_test', methods: ['POST'])]
     public function index(
         #[MapRequestPayload] PlexEventPayloadDto $dto,
-        LoggerInterface                          $logger,
-        ShowRepositoryInterface                  $showRepository,
-        EpisodeRepositoryInterface               $episodeRepository
-    ): Response
-    {
+        LoggerInterface $logger,
+        ShowRepositoryInterface $showRepository,
+        ReleaseRepositoryInterface $episodeRepository
+    ): Response {
         $payload = json_decode($dto->payload, true);
         $event = $payload['event'] ?? 'none';
 
-//        switch ($event) {
+        //        switch ($event) {
 //            case 'media.play':
 //            case 'media.resume':
 //                $this->logWatchEvent($payload, $logger);
@@ -38,7 +37,7 @@ final class TestController extends AbstractController
 
         $tvdbLink = array_find($payload['Metadata']['Guid'], static fn(array $value) => str_starts_with($value['id'], 'tvdb://'));
         $tvdbId = substr($tvdbLink['id'], 7);
-        $episode = $episodeRepository->findById((int)$tvdbId);
+        $episode = $episodeRepository->findById((int) $tvdbId);
         $show = $showRepository->findById($episode->seriesId);
         $logger->info('Fetched show: ' . $show->originalTitle);
 
