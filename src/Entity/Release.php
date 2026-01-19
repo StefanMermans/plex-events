@@ -19,7 +19,7 @@ class Release
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'releases')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Series $Series = null;
 
     #[ORM\Column(enumType: ReleaseType::class)]
@@ -42,6 +42,9 @@ class Release
 
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     private ?string $tvdbId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title_en = null;
 
     public function __construct()
     {
@@ -151,6 +154,18 @@ class Release
     public function setTvdbId(?string $tvdbId): static
     {
         $this->tvdbId = $tvdbId;
+
+        return $this;
+    }
+
+    public function getTitleEn(): ?string
+    {
+        return $this->title_en;
+    }
+
+    public function setTitleEn(?string $title_en): static
+    {
+        $this->title_en = $title_en;
 
         return $this;
     }

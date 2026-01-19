@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Exception;
 
 final class LoginController extends AbstractController
 {
@@ -19,8 +18,6 @@ final class LoginController extends AbstractController
             return $this->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->json([
-            'user' => $user,
-        ]);
+        return $this->json(['user' => $user]);
     }
 }

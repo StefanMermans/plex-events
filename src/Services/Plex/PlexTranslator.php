@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace App\Services\Plex;
 
 use App\Dto\MediaEventDto;
-use App\Repository\ReleaseRepository;
-use App\Repository\SeriesRepository;
 use App\Services\Tvdb\TvdbEpisodeRepository;
 use App\Services\Tvdb\TvdbMovieRepository;
 
 class PlexTranslator
 {
     public function __construct(
-        private SeriesRepository $seriesRepository,
-        private ReleaseRepository $releaseRepository,
         private TvdbEpisodeRepository $tvdbEpisodeRepository,
         private TvdbMovieRepository $tvdbMovieRepository,
     ) {
@@ -22,10 +18,10 @@ class PlexTranslator
 
     public function translate(array $data): MediaEventDto
     {
-        $event = new MediaEventDto(event: $data['event']);
-        $event = $this->addReleaseToMediaEvent($event, $data);
-
-        return $event;
+        return $this->addReleaseToMediaEvent(
+            new MediaEventDto(event: $data['event']),
+            $data
+        );
     }
 
     protected function addReleaseToMediaEvent(MediaEventDto $event, array $data): MediaEventDto

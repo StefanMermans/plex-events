@@ -38,7 +38,7 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/plex/event$, roles: PUBLIC_ACCESS }
+        - { path: ^/plex/event/user/\d+$, roles: PUBLIC_ACCESS }
         - { path: ^/.*, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 

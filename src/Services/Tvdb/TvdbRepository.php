@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Services\Tvdb;
+declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Contracts\Cache\CacheInterface;
+namespace App\Services\Tvdb;
 
 class TvdbRepository
 {
     public function __construct(
         protected TvdbClient $client,
-        #[Autowire(service: 'cache.tvdb')]
-        protected CacheInterface $cache,
-    ) {
+    )
+    {
+    }
+
+    protected function getAuthenticatedClient(): TvdbClient
+    {
+        return $this->client->authenticate();
     }
 }

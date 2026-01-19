@@ -16,6 +16,8 @@ final class MediaEventHandler
 
     public function handle(MediaEventDto $mediaEventDto): void
     {
-        $this->logger->info('Media event received', ['event' => $mediaEventDto]);
+        if ($mediaEventDto->event === 'scrobble') {
+            
+        }
     }
 }

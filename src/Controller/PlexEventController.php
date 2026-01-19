@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\PlexEventPayloadDto;
+use App\Entity\User;
 use App\Services\Media\MediaEventHandler;
 use App\Services\Plex\PlexTranslator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,9 +29,10 @@ final class PlexEventController extends AbstractController
     ) {
     }
 
-    #[Route('/plex/event', name: 'app_plex_event')]
+    #[Route('/plex/event/user/{user}', name: 'app_plex_event')]
     public function index(
         Request $request,
+        User $user,
         #[MapRequestPayload] PlexEventPayloadDto $dto,
     ): Response {
         if (!$this->uriSigner->check($request->getUri())) {
@@ -38,6 +40,7 @@ final class PlexEventController extends AbstractController
         }
 
         $plexEventDto = $this->plexTranslator->translate(json_decode($dto->payload, true));
+        $plexEventDto->user = $user;
         $this->mediaEventHandler->handle($plexEventDto);
 
         return new Response('', Response::HTTP_NO_CONTENT);
